@@ -8,11 +8,7 @@ from scipy.stats import linregress
 
 
 def extract_data_points(fname):
-    # return a dict called 'data', such that
-    # data[s, i, j] = (d, f),
-    # where s is the series, i, j are the point coordinates;
-    # d is a numpy array containing measured distances,
-    # f is a numpy array containing measured forces.
+    
     data = dict()
     with open(fname, 'rt') as ftext:
         lines = ftext.readlines()
@@ -43,11 +39,10 @@ def extract_data_points(fname):
 
 def raw_plot(point, curve, save=None, show=True):
     """plot one raw distance-force curve"""
-    # point is the triple (s, i, j) with series s, iIndex i, jIndex j
-    # curve is the pair (d, f) of two numpy arrays with distances and forces
+    
     d, f = curve
     plt.figure(figsize=[9, 6])
-    #part
+
     min_f_index = np.argmin(f)
     window_for_d = None
     window_for_f = None
@@ -87,8 +82,6 @@ def raw_plot(point, curve, save=None, show=True):
         plt.show()
     plt.close()
     
-    #part2
-
 
 
 def do_raw_plots(data, show, plotprefix):

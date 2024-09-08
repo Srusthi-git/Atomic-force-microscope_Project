@@ -1,14 +1,3 @@
-"""
-1. Rename this file to app.py
-2. Download the preprocessed data files 'afm.heights.npy', 'afm.data.pickled' at:
-   https://kingsx.cs.uni-saarland.de/index.php/s/KFrpMwCfJtaLpX3
-3. streamlit run app.py -- afm
-   This will take time to load the data and ESTIMATE the slopes with your code
-   to be written here in function estimate_slope().
-   Make sure that your code is efficient enough to run in a few seconds.
-   Otherwise your application will seem to load forever.
-"""
-
 
 from argparse import ArgumentParser
 import pickle
@@ -16,16 +5,6 @@ import pickle
 import numpy as np
 import streamlit as st
 import matplotlib.pyplot as plt
-import plotly.express as px
-from streamlit_plotly_events import plotly_events
-
-
-# You can use plotly instead of pyplot for nicer (and possibly interactive) plots.
-# However, they must be installed separately using mamba or pip:
-# import plotly.express as px  # mamba install plotly
-# from streamlit_plotly_events import plotly_events  # pip install streamlit_plotly_events
-
-
 
 @st.cache_data
 def load_data(prefix):
@@ -65,8 +44,8 @@ def do_plot(point, curve, slope=None, anchors=None):
     if slope is not None and anchors is not None:
         anchor0, anchor1 = anchors[0], anchors[1]
         plt.axline(anchor0, slope=slope, color='red', linestyle='--', label=f'{slope:.4g} N/m')
-        plt.plot([anchor0[0]], [anchor0[1]], 'rx') # scatter x
-        plt.plot([anchor1[0]], [anchor1[1]], 'rx') # scatter x
+        plt.plot([anchor0[0]], [anchor0[1]], 'rx') 
+        plt.plot([anchor1[0]], [anchor1[1]], 'rx')
     plt.legend()
     return fig
 
@@ -74,9 +53,9 @@ def do_plot(point, curve, slope=None, anchors=None):
 def estimate_slope(curve, s, nan=float("nan")):
     d, f = curve
     if s == 0:
-        d, f = d[::-1], f[::-1]  # Reverse d and f for series-0 spectra
+        d, f = d[::-1], f[::-1]  
 
-    # Apply thresholding to filter out small values
+    
     mask = f <= 1.2e-09
     d_process = d[mask]
     f_process = f[mask]
@@ -103,8 +82,8 @@ def estimate_slope(curve, s, nan=float("nan")):
     best_f = f_windows[best_index]
     anchor1 = (best_d[0], best_f[0])
     anchor2 = (best_d[-1], best_f[-1])
-    anchors = (anchor1, anchor2)  # anchor1 = (some_d, some_f), same for anchor2
-    info = None  # can by anything you want to return in addition
+    anchors = (anchor1, anchor2)
+    info = None  
     return (slope, anchors, info)
 
 p = ArgumentParser()
@@ -114,7 +93,7 @@ prefix = args.prefix
 
 st.sidebar.title("AFM Data Explorer")
 st.sidebar.write(f"Path prefix:\n'{prefix}'")
-H, S, slope_est, slope_heatmaps = load_data(prefix)  # cached
+H, S, slope_est, slope_heatmaps = load_data(prefix)  
 m, n = H.shape
 nseries = len(slope_heatmaps)
 
@@ -145,4 +124,4 @@ slope, anchors, _ = slope_est[point]
 fig = do_plot(point, curve, slope, anchors)
 st.pyplot(fig)
 
-# streamlit run app.py -- afm
+
